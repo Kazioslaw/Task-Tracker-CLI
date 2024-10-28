@@ -30,12 +30,14 @@ namespace TaskTracker
 			{
 				if (args[0].ToLower() == "add")
 				{
-
-					taskList.Add(new Task
+					Task task = new Task()
 					{
 						ID = taskList.Count > 0 ? taskList.Max(t => t.ID) + 1 : 1,
 						Description = args[1] ?? "Nie podano opisu zadania"
-					});
+					};
+
+					taskList.Add(task);
+					Console.WriteLine($"Task added successfully (ID: {task.ID})");
 				}
 
 				else if (args[0].ToLower() == "update")
@@ -48,6 +50,8 @@ namespace TaskTracker
 							taskList[taskIndex].Description = args[2];
 							taskList[taskIndex].UpdatedAt = DateTime.Now;
 						}
+
+						Console.WriteLine($"Task updated successfully");
 					}
 				}
 
@@ -85,6 +89,7 @@ namespace TaskTracker
 						if (taskIndex > -1)
 						{
 							taskList.RemoveAt(taskIndex);
+							Console.WriteLine("Task successfully removed");
 						}
 					}
 				}
@@ -145,7 +150,7 @@ namespace TaskTracker
 							Console.WriteLine($"{task.ID,-5}{task.Description,-30}{status,-10}{task.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"),-22}{task.UpdatedAt?.ToString("dd/MM/yyyy HH:mm:ss"),-20}");
 						}
 					}
-					else if (args[1].ToLower() == "in-progress")
+					else if (args[1].ToLower() == "in-progress" || args[1].ToLower() == "inprogress")
 					{
 						var inProgressTaskList = (from task in taskList
 												  where task.Status == Status.InProgress
