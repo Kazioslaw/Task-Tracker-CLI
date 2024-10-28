@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 
 namespace TaskTracker
 {
@@ -6,6 +7,7 @@ namespace TaskTracker
 	{
 		static void Main(string[] args)
 		{
+			Console.OutputEncoding = Encoding.UTF8;
 			//args = new string[] { "update", "0", "Error" };
 			string fileName = "TaskTracker.json";
 			int taskID = 0;
@@ -23,7 +25,7 @@ namespace TaskTracker
 			{
 				taskList = new List<Task>();
 			}
-			var header = $"{"ID",-5} {"Description",-30} {"Status",-15} {"Created",-20} {"Updated",-20}";
+			var header = $"{"ID",-5}{"Description",-30}{"Status",-10}{"Created",-22}{"Updated",-22}";
 			if (args.Length > 0)
 			{
 				if (args[0].ToLower() == "add")
@@ -44,6 +46,7 @@ namespace TaskTracker
 						if (taskIndex > -1)
 						{
 							taskList[taskIndex].Description = args[2];
+							taskList[taskIndex].UpdatedAt = DateTime.Now;
 						}
 					}
 				}
@@ -56,6 +59,7 @@ namespace TaskTracker
 						if (taskIndex > -1)
 						{
 							taskList[taskIndex].Status = Status.InProgress;
+							taskList[taskIndex].UpdatedAt = DateTime.Now;
 						}
 					}
 				}
@@ -68,6 +72,7 @@ namespace TaskTracker
 						if (taskIndex > -1)
 						{
 							taskList[taskIndex].Status = Status.Complete;
+							taskList[taskIndex].UpdatedAt = DateTime.Now;
 						}
 					}
 				}
@@ -92,7 +97,14 @@ namespace TaskTracker
 						Console.WriteLine(new string('-', header.Length));
 						foreach (var task in taskList)
 						{
-							Console.WriteLine($"{task.ID,-5}{task.Description,-30}{task.Status.ToString(),-15}{task.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"),-20}{(task.UpdatedAt != null ? $",Updated: {task.UpdatedAt?.ToString("dd/MM/yyyy HH:mm:ss"),-20}" : string.Empty)}");
+							string status = task.Status switch
+							{
+								Status.ToDo => "\U0001F4DD",
+								Status.InProgress => "\U0001F504",
+								Status.Complete => "\U00002705",
+								_ => "\U00002753"
+							};
+							Console.WriteLine($"{task.ID,-5}{task.Description,-30}{status,-10}{task.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"),-22}{task.UpdatedAt?.ToString("dd/MM/yyyy HH:mm:ss"),-20}");
 						}
 					}
 					else if (args[1].ToLower() == "done")
@@ -104,7 +116,14 @@ namespace TaskTracker
 						Console.WriteLine(new string('-', header.Length));
 						foreach (var task in doneTaskList)
 						{
-							Console.WriteLine($"{task.ID,-5}{task.Description,-30}{task.Status.ToString(),-15}{task.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"),-20}{(task.UpdatedAt != null ? $",Updated: {task.UpdatedAt?.ToString("dd/MM/yyyy HH:mm:ss"),-20}" : string.Empty)}");
+							string status = task.Status switch
+							{
+								Status.ToDo => "\U0001F4DD",
+								Status.InProgress => "\U0001F504",
+								Status.Complete => "\U00002705",
+								_ => "\U00002753"
+							};
+							Console.WriteLine($"{task.ID,-5}{task.Description,-30}{status,-10}{task.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"),-22}{task.UpdatedAt?.ToString("dd/MM/yyyy HH:mm:ss"),-20}");
 						}
 					}
 					else if (args[1].ToLower() == "todo")
@@ -116,7 +135,14 @@ namespace TaskTracker
 						Console.WriteLine(new string('-', header.Length));
 						foreach (var task in todoTaskList)
 						{
-							Console.WriteLine($"{task.ID,-5}{task.Description,-30}{task.Status.ToString(),-15}{task.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"),-20}{(task.UpdatedAt != null ? $",Updated: {task.UpdatedAt?.ToString("dd/MM/yyyy HH:mm:ss"),-20}" : string.Empty)}");
+							string status = task.Status switch
+							{
+								Status.ToDo => "\U0001F4DD",
+								Status.InProgress => "\U0001F504",
+								Status.Complete => "\U00002705",
+								_ => "\U00002753"
+							};
+							Console.WriteLine($"{task.ID,-5}{task.Description,-30}{status,-10}{task.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"),-22}{task.UpdatedAt?.ToString("dd/MM/yyyy HH:mm:ss"),-20}");
 						}
 					}
 					else if (args[1].ToLower() == "in-progress")
@@ -128,7 +154,14 @@ namespace TaskTracker
 						Console.WriteLine(new string('-', header.Length));
 						foreach (var task in inProgressTaskList)
 						{
-							Console.WriteLine($"{task.ID,-5}{task.Description,-30}{task.Status.ToString(),-15}{task.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"),-20}{(task.UpdatedAt != null ? $",Updated: {task.UpdatedAt?.ToString("dd/MM/yyyy HH:mm:ss"),-20}" : string.Empty)}");
+							string status = task.Status switch
+							{
+								Status.ToDo => "\U0001F4DD",
+								Status.InProgress => "\U0001F504",
+								Status.Complete => "\U00002705",
+								_ => "\U00002753"
+							};
+							Console.WriteLine($"{task.ID,-5}{task.Description,-30}{status,-10}{task.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss"),-22}{task.UpdatedAt?.ToString("dd/MM/yyyy HH:mm:ss"),-20}");
 						}
 					}
 				}
